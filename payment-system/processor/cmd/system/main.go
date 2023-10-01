@@ -8,6 +8,7 @@ import (
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/ellofae/payment-system-kafka/config"
+	"github.com/ellofae/payment-system-kafka/internal/encryption"
 	"github.com/ellofae/payment-system-kafka/payment-system/data"
 	"github.com/ellofae/payment-system-kafka/payment-system/processor/internal/processing"
 	"github.com/ellofae/payment-system-kafka/pkg/logger"
@@ -18,6 +19,8 @@ const topic string = "purchases"
 func main() {
 	log := logger.GetLogger()
 	cfg := config.ParseConfig(config.ConfigureViper())
+
+	encryption.InitializeEncryptionKey(cfg)
 
 	c, err := processing.InitializeConsumer(cfg)
 	if err != nil {
@@ -41,6 +44,11 @@ func main() {
 			err := decoder.Decode(transactionData)
 			if err != nil {
 				log.Error("Unable to decode transaction data", "error", err.Error())
+				os.Exit(1)
+			}
+
+			transactionData.CardNumber, err = encryption.DecryptData(transactionData.CardNumber)
+			if err != nil {
 				os.Exit(1)
 			}
 

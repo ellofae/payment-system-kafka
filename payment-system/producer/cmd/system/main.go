@@ -19,7 +19,7 @@ func InitializeProducer(cfg *config.Config) (*kafka.Producer, error) {
 	log := logger.GetLogger()
 
 	producer, err := kafka.NewProducer(&kafka.ConfigMap{
-		"bootstrap.servers": fmt.Sprintf("%s:%s", cfg.Kafka.BootstrapServersPort, cfg.Kafka.BootstrapServersHost),
+		"bootstrap.servers": fmt.Sprintf("%s:%s", cfg.Kafka.BootstrapServersHost, cfg.Kafka.BootstrapServersPort),
 		"client.id":         cfg.Kafka.ProducerID,
 		"acks":              cfg.Kafka.Acks,
 	})
@@ -48,7 +48,7 @@ func main() {
 	log.Info("Starting producing transactions..")
 	for i := 1; i <= 10000; i++ {
 		cardNumber := "1023-412-123-521"
-		_, err := encryption.EncryptData(cardNumber)
+		encryptedCardNumber, err := encryption.EncryptData(cardNumber)
 		if err != nil {
 			os.Exit(1)
 		}
@@ -56,7 +56,7 @@ func main() {
 		data := &data.TransactionData{
 			UserID:        1,
 			TransactionID: i,
-			CardNumber:    cardNumber,
+			CardNumber:    encryptedCardNumber,
 			Description:   "transaction description",
 			Amount:        100.0,
 		}

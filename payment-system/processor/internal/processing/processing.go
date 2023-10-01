@@ -12,7 +12,7 @@ func InitializeConsumer(cfg *config.Config) (*kafka.Consumer, error) {
 	log := logger.GetLogger()
 
 	consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers": fmt.Sprintf("%s:%s", cfg.Kafka.BootstrapServersPort, cfg.Kafka.BootstrapServersHost),
+		"bootstrap.servers": fmt.Sprintf("%s:%s", cfg.Kafka.BootstrapServersHost, cfg.Kafka.BootstrapServersPort),
 		"group.id":          cfg.Kafka.GroupID,
 		"auto.offset.reset": cfg.Kafka.AutoOffsetReset,
 	})
