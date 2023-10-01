@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/ellofae/payment-system-kafka/config"
 	"github.com/ellofae/payment-system-kafka/payment-system/data"
 	"github.com/ellofae/payment-system-kafka/payment-system/processor/internal/processing"
 	"github.com/ellofae/payment-system-kafka/pkg/logger"
@@ -16,8 +17,9 @@ const topic string = "purchases"
 
 func main() {
 	log := logger.GetLogger()
+	cfg := config.ParseConfig(config.ConfigureViper())
 
-	c, err := processing.InitializeConsumer()
+	c, err := processing.InitializeConsumer(cfg)
 	if err != nil {
 		os.Exit(1)
 	}

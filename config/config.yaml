@@ -4,6 +4,7 @@ Kafka:
   bootstrapServersHost: 'localhost'
   bootstrapServersPort: '9092'
   autoOffsetReset: 'smallest'
+  groupId: 'transaction_consumer'
 
 Encryption:
   algorithm: 'AES'

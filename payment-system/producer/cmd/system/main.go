@@ -53,7 +53,6 @@ func main() {
 			os.Exit(1)
 		}
 
-		fmt.Println("test 1")
 		data := &data.TransactionData{
 			UserID:        1,
 			TransactionID: i,
@@ -62,12 +61,9 @@ func main() {
 			Amount:        100.0,
 		}
 
-		fmt.Println("test 2")
-
 		if err := transactionProducer.ProcessTransaction(data); err != nil {
 			os.Exit(1)
 		}
-		fmt.Println("test 3")
 		time.Sleep(time.Second * 3)
 	}
 }

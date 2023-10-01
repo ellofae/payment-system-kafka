@@ -14,6 +14,7 @@ type Config struct {
 		BootstrapServersHost string `yaml:"bootstrapServersHost"`
 		BootstrapServersPort string `yaml:"bootstrapServersPort"`
 		AutoOffsetReset      string `yaml:"autoOffsetReset"`
+		GroupID              string `yaml:"groupId"`
 	} `yaml:"Kafka"`
 
 	Encryption struct {

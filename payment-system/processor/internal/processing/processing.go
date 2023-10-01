@@ -1,17 +1,20 @@
 package processing
 
 import (
+	"fmt"
+
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/ellofae/payment-system-kafka/config"
 	"github.com/ellofae/payment-system-kafka/pkg/logger"
 )
 
-func InitializeConsumer() (*kafka.Consumer, error) {
+func InitializeConsumer(cfg *config.Config) (*kafka.Consumer, error) {
 	log := logger.GetLogger()
 
 	consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers": "localhost:9092",
-		"group.id":          "transaction_consumer",
-		"auto.offset.reset": "smallest",
+		"bootstrap.servers": fmt.Sprintf("%s:%s", cfg.Kafka.BootstrapServersPort, cfg.Kafka.BootstrapServersHost),
+		"group.id":          cfg.Kafka.GroupID,
+		"auto.offset.reset": cfg.Kafka.AutoOffsetReset,
 	})
 
 	if err != nil {
