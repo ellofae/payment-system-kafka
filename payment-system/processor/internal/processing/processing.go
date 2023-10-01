@@ -1,8 +1,8 @@
-package processor
+package processing
 
 import (
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/ellofae/payment-system-kafka/payment-system/pkg/logger"
+	"github.com/ellofae/payment-system-kafka/pkg/logger"
 )
 
 func InitializeConsumer() (*kafka.Consumer, error) {

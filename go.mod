@@ -1,4 +1,4 @@
-module github.com/ellofae/payment-system-kafka/payment-system
+module github.com/ellofae/payment-system-kafka
 
 go 1.20
 

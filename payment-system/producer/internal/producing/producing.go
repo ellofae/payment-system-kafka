@@ -1,12 +1,13 @@
-package producer
+package producing
 
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/ellofae/payment-system-kafka/payment-system/internal/data"
-	"github.com/ellofae/payment-system-kafka/payment-system/pkg/logger"
+	"github.com/ellofae/payment-system-kafka/payment-system/data"
+	"github.com/ellofae/payment-system-kafka/pkg/logger"
 )
 
 type TransactionProducer struct {
@@ -46,7 +47,7 @@ func (tp *TransactionProducer) ProcessTransaction(transactionData *data.Transact
 	}
 
 	<-tp.transactionStatus
-	log.Info("Placed transaction on the queue, transaction ID: %d", transactionData.TransactionID)
+	log.Info(fmt.Sprintf("Placed transaction on the queue, transaction ID: %d", transactionData.TransactionID))
 
 	return nil
 }
