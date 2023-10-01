@@ -1,0 +1,6 @@
+Kafka:
+  acks: 'all'
+  producerId: 'transaction_producer'
+  bootstrapServersHost: 'localhost'
+  bootstrapServersPort: '9092'
+  autoOffsetReset: 'smallest'

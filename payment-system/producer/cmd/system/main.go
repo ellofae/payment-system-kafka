@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/ellofae/payment-system-kafka/config"
 	"github.com/ellofae/payment-system-kafka/payment-system/data"
 	"github.com/ellofae/payment-system-kafka/payment-system/producer/internal/producing"
 	"github.com/ellofae/payment-system-kafka/pkg/logger"
@@ -12,13 +14,13 @@ import (
 
 const topic string = "purchases"
 
-func InitializeProducer() (*kafka.Producer, error) {
+func InitializeProducer(cfg *config.Config) (*kafka.Producer, error) {
 	log := logger.GetLogger()
 
 	producer, err := kafka.NewProducer(&kafka.ConfigMap{
-		"bootstrap.servers": "localhost:9092",
-		"client.id":         "transaction_producer",
-		"acks":              "all",
+		"bootstrap.servers": fmt.Sprintf("%s:%s", cfg.Kafka.BootstrapServersPort, cfg.Kafka.BootstrapServersHost),
+		"client.id":         cfg.Kafka.ProducerID,
+		"acks":              cfg.Kafka.Acks,
 	})
 
 	if err != nil {
@@ -31,8 +33,9 @@ func InitializeProducer() (*kafka.Producer, error) {
 
 func main() {
 	log := logger.GetLogger()
+	cfg := config.ParseConfig(config.ConfigureViper())
 
-	p, err := InitializeProducer()
+	p, err := InitializeProducer(cfg)
 	if err != nil {
 		os.Exit(1)
 	}
