@@ -45,8 +45,6 @@ func main() {
 			fmt.Printf("processed transaction: %v\n", transactionData)
 		case kafka.Error:
 			fmt.Printf("kafka error: %v\n", eventValue)
-			// default:
-			// 	fmt.Printf("default behavior")
 		}
 	}
 }

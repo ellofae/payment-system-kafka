@@ -14,7 +14,12 @@ type Config struct {
 		BootstrapServersHost string `yaml:"bootstrapServersHost"`
 		BootstrapServersPort string `yaml:"bootstrapServersPort"`
 		AutoOffsetReset      string `yaml:"autoOffsetReset"`
-	}
+	} `yaml:"Kafka"`
+
+	Encryption struct {
+		Algorithm     string `yaml:"algorithm"`
+		EncryptionKey string `yaml:"encryptionKey"`
+	} `yaml:"Encryption"`
 }
 
 func ConfigureViper() *viper.Viper {

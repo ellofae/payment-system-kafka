@@ -4,3 +4,7 @@ Kafka:
   bootstrapServersHost: 'localhost'
   bootstrapServersPort: '9092'
   autoOffsetReset: 'smallest'
+
+Encryption:
+  algorithm: 'AES'
+  encryptionKey: 'thisis32bitlongpassphraseimusing'

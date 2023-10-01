@@ -7,6 +7,7 @@ import (
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/ellofae/payment-system-kafka/config"
+	"github.com/ellofae/payment-system-kafka/internal/encryption"
 	"github.com/ellofae/payment-system-kafka/payment-system/data"
 	"github.com/ellofae/payment-system-kafka/payment-system/producer/internal/producing"
 	"github.com/ellofae/payment-system-kafka/pkg/logger"
@@ -35,6 +36,8 @@ func main() {
 	log := logger.GetLogger()
 	cfg := config.ParseConfig(config.ConfigureViper())
 
+	encryption.InitializeEncryptionKey(cfg)
+
 	p, err := InitializeProducer(cfg)
 	if err != nil {
 		os.Exit(1)
@@ -44,17 +47,27 @@ func main() {
 
 	log.Info("Starting producing transactions..")
 	for i := 1; i <= 10000; i++ {
+		cardNumber := "1023-412-123-521"
+		_, err := encryption.EncryptData(cardNumber)
+		if err != nil {
+			os.Exit(1)
+		}
+
+		fmt.Println("test 1")
 		data := &data.TransactionData{
 			UserID:        1,
 			TransactionID: i,
-			CardNumber:    "xxx-1024-5213", // encription suposed to be done here
+			CardNumber:    cardNumber,
 			Description:   "transaction description",
 			Amount:        100.0,
 		}
 
+		fmt.Println("test 2")
+
 		if err := transactionProducer.ProcessTransaction(data); err != nil {
 			os.Exit(1)
 		}
+		fmt.Println("test 3")
 		time.Sleep(time.Second * 3)
 	}
 }
