@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"sync"
 
 	"github.com/ellofae/payment-system-kafka/payment-system/producer/internal/controller"
 	"github.com/ellofae/payment-system-kafka/payment-system/producer/internal/domain"
@@ -42,17 +43,26 @@ func (th *TransactionHandler) handlePlaceTransaction(c *gin.Context) {
 		return
 	}
 
-	err = th.transactionUsecase.PlaceTransaction(c.Request.Context(), transactionData)
-	if err != nil {
-		th.logger.Error("Internal error occured", "error", err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "Some internal error occured",
-			"error":   err.Error(),
-		})
-		return
-	}
+	var wg sync.WaitGroup
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+
+		err = th.transactionUsecase.PlaceTransaction(c.Request.Context(), transactionData)
+		if err != nil {
+			th.logger.Error("Internal error occured", "error", err.Error())
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "Some internal error occured",
+				"error":   err.Error(),
+			})
+			return
+		}
+	}()
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Transaction has been produced",
 	})
+
+	wg.Wait()
 }

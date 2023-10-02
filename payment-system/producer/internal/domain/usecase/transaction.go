@@ -31,7 +31,7 @@ func (tu *TransactionUsecase) PlaceTransaction(ctx context.Context, data *entity
 
 	// data.CardNumber = encryptedCardNumber
 
-	if err := tu.producer.ProcessTransaction(data); err != nil {
+	if err := tu.producer.ProduceTransaction(data); err != nil {
 		return err
 	}
 	time.Sleep(time.Second * 3)

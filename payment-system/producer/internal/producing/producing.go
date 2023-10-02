@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"sync"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/ellofae/payment-system-kafka/payment-system/producer/internal/domain/entity"
@@ -14,6 +15,7 @@ type TransactionProducer struct {
 	producer          *kafka.Producer
 	topic             string
 	transactionStatus chan kafka.Event
+	lock              sync.Mutex
 }
 
 func NewTransactionProducer(p *kafka.Producer, topic string) *TransactionProducer {
@@ -24,7 +26,10 @@ func NewTransactionProducer(p *kafka.Producer, topic string) *TransactionProduce
 	}
 }
 
-func (tp *TransactionProducer) ProcessTransaction(transactionData *entity.TransactionData) error {
+func (tp *TransactionProducer) ProduceTransaction(transactionData *entity.TransactionData) error {
+	tp.lock.Lock()
+	defer tp.lock.Unlock()
+
 	log := logger.GetLogger()
 
 	buffer := &bytes.Buffer{}
