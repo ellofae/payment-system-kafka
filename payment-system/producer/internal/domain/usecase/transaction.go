@@ -24,12 +24,8 @@ func NewTransactionUsecase(producer *producing.TransactionProducer) domain.ITran
 }
 
 func (tu *TransactionUsecase) PlaceTransaction(ctx context.Context, data *entity.TransactionData) error {
-	// encryptedCardNumber, err := encryption.EncryptData(data.CardNumber)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// data.CardNumber = encryptedCardNumber
+	//encryptedCardNumber := encryption.EncryptData([]byte("key"), data.CardNumber)
+	//data.CardNumber = encryptedCardNumber
 
 	if err := tu.producer.ProduceTransaction(data); err != nil {
 		return err

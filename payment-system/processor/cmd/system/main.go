@@ -13,8 +13,6 @@ import (
 	"github.com/ellofae/payment-system-kafka/payment-system/processor/internal/domain/entity"
 	"github.com/ellofae/payment-system-kafka/payment-system/processor/internal/processing"
 	"github.com/ellofae/payment-system-kafka/pkg/logger"
-
-	"github.com/pkg/profile"
 )
 
 const topic string = "purchases"
@@ -43,7 +41,6 @@ func main() {
 	var intrSignal bool
 
 	msg_count := 0
-	defer profile.Start(profile.MemProfile, profile.ProfilePath(".")).Stop()
 	for {
 		intrSignal = false
 		eventValue := c.Poll(100)
@@ -77,10 +74,7 @@ func main() {
 					return
 				}
 
-				// transactionData.CardNumber, err = encryption.DecryptData(transactionData.CardNumber)
-				// if err != nil {
-				// 	os.Exit(1)
-				// }
+				//transactionData.CardNumber = encryption.DecryptData([]byte("key"), transactionData.CardNumber)
 
 				fmt.Printf("processed transaction: %v\n", transactionData)
 			}()
