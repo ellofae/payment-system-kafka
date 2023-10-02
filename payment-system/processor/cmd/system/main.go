@@ -9,9 +9,9 @@ import (
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/ellofae/payment-system-kafka/config"
-	"github.com/ellofae/payment-system-kafka/internal/encryption"
 	"github.com/ellofae/payment-system-kafka/payment-system/processor/internal/domain/entity"
 	"github.com/ellofae/payment-system-kafka/payment-system/processor/internal/processing"
+	"github.com/ellofae/payment-system-kafka/pkg/encryption"
 	"github.com/ellofae/payment-system-kafka/pkg/logger"
 )
 
