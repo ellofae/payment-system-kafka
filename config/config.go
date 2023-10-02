@@ -21,6 +21,13 @@ type Config struct {
 		Algorithm     string `yaml:"algorithm"`
 		EncryptionKey string `yaml:"encryptionKey"`
 	} `yaml:"Encryption"`
+
+	ProducerServer struct {
+		BindAddr     string `yaml:"bindAddr"`
+		ReadTimeout  string `yaml:"readTimeout"`
+		WriteTimeout string `yaml:"writeTimeout"`
+		IdleTimeout  string `yaml:"idleTimeout"`
+	} `yaml:"ProducerServer"`
 }
 
 func ConfigureViper() *viper.Viper {

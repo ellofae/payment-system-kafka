@@ -9,3 +9,9 @@ Kafka:
 Encryption:
   algorithm: 'AES'
   encryptionKey: 'thisis32bitlongpassphraseimusing'
+
+ProducerServer:
+  bindAddr: '0.0.0.0:8000'
+  readTimeout: '10'
+  writeTimeout: '10'
+  idleTimeout: '5'

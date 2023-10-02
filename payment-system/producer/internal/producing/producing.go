@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/ellofae/payment-system-kafka/payment-system/data"
+	"github.com/ellofae/payment-system-kafka/payment-system/producer/internal/domain/entity"
 	"github.com/ellofae/payment-system-kafka/pkg/logger"
 )
 
@@ -24,7 +24,7 @@ func NewTransactionProducer(p *kafka.Producer, topic string) *TransactionProduce
 	}
 }
 
-func (tp *TransactionProducer) ProcessTransaction(transactionData *data.TransactionData) error {
+func (tp *TransactionProducer) ProcessTransaction(transactionData *entity.TransactionData) error {
 	log := logger.GetLogger()
 
 	buffer := &bytes.Buffer{}
