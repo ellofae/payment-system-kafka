@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/ellofae/payment-system-kafka/internal/encryption"
 	"github.com/ellofae/payment-system-kafka/payment-system/producer/internal/domain"
 	"github.com/ellofae/payment-system-kafka/payment-system/producer/internal/domain/entity"
 	"github.com/ellofae/payment-system-kafka/payment-system/producer/internal/producing"
@@ -25,12 +24,12 @@ func NewTransactionUsecase(producer *producing.TransactionProducer) domain.ITran
 }
 
 func (tu *TransactionUsecase) PlaceTransaction(ctx context.Context, data *entity.TransactionData) error {
-	encryptedCardNumber, err := encryption.EncryptData(data.CardNumber)
-	if err != nil {
-		return err
-	}
+	// encryptedCardNumber, err := encryption.EncryptData(data.CardNumber)
+	// if err != nil {
+	// 	return err
+	// }
 
-	data.CardNumber = encryptedCardNumber
+	// data.CardNumber = encryptedCardNumber
 
 	if err := tu.producer.ProcessTransaction(data); err != nil {
 		return err

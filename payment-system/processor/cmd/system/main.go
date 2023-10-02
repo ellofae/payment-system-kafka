@@ -9,7 +9,7 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/ellofae/payment-system-kafka/config"
 	"github.com/ellofae/payment-system-kafka/internal/encryption"
-	"github.com/ellofae/payment-system-kafka/payment-system/data"
+	"github.com/ellofae/payment-system-kafka/payment-system/processor/internal/domain/entity"
 	"github.com/ellofae/payment-system-kafka/payment-system/processor/internal/processing"
 	"github.com/ellofae/payment-system-kafka/pkg/logger"
 )
@@ -38,7 +38,7 @@ func main() {
 
 		switch eventValue := eventValue.(type) {
 		case *kafka.Message:
-			transactionData := &data.TransactionData{}
+			transactionData := &entity.TransactionData{}
 
 			decoder := json.NewDecoder(bytes.NewReader(eventValue.Value))
 			err := decoder.Decode(transactionData)
@@ -47,10 +47,10 @@ func main() {
 				os.Exit(1)
 			}
 
-			transactionData.CardNumber, err = encryption.DecryptData(transactionData.CardNumber)
-			if err != nil {
-				os.Exit(1)
-			}
+			// transactionData.CardNumber, err = encryption.DecryptData(transactionData.CardNumber)
+			// if err != nil {
+			// 	os.Exit(1)
+			// }
 
 			fmt.Printf("processed transaction: %v\n", transactionData)
 		case kafka.Error:
