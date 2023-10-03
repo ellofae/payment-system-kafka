@@ -27,8 +27,23 @@ func NewAuthenticationHandler(authUsecase domain.IAuthenticationUsecase) control
 func (h *AuthenticationHandler) Register(r *gin.Engine) {
 	authGroup := r.Group("/auth")
 
+	authGroup.GET("/signup", h.handleRegistrationRendering)
+	authGroup.GET("/signin", h.handleUserLoginRendering)
+
 	authGroup.POST("/signup", h.handleUserRegistration)
 	authGroup.POST("/signin", h.handleUserLogin)
+}
+
+func (h *AuthenticationHandler) handleRegistrationRendering(c *gin.Context) {
+	c.HTML(http.StatusOK, "registration.html", gin.H{
+		"title": "register",
+	})
+}
+
+func (h *AuthenticationHandler) handleUserLoginRendering(c *gin.Context) {
+	c.HTML(http.StatusOK, "login.html", gin.H{
+		"title": "login",
+	})
 }
 
 func (h *AuthenticationHandler) handleUserRegistration(c *gin.Context) {

@@ -46,6 +46,8 @@ func Run() {
 func InitRouter(storage *repository.Storage) *gin.Engine {
 	r := gin.Default()
 
+	r.LoadHTMLGlob("client/web/templates/*.html")
+
 	authenticationRepository := repository.NewAuthenticationRepository(storage)
 	authenticationUsecase := usecase.NewAuthenticationUsecase(authenticationRepository)
 	authenticationHandler := handler.NewAuthenticationHandler(authenticationUsecase)
