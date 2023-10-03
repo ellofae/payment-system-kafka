@@ -99,39 +99,6 @@ func (r *AuthenticationRepository) GetUserCredByEmail(ctx context.Context, email
 	return dto_model, nil
 }
 
-const get_role_by_title_query = `SELECT id FROM roles WHERE role_title = $1`
-
-func (r *AuthenticationRepository) GetRoleByTitle(ctx context.Context, title string) (int, error) {
-	var id int
-
-	conn, err := r.storage.GetPgConnPool().Acquire(ctx)
-	if err != nil {
-		return -1, err
-	}
-	defer conn.Release()
-
-	tx, err := conn.Begin(ctx)
-	if err != nil {
-		return -1, err
-	}
-	defer tx.Rollback(ctx)
-
-	if err := tx.QueryRow(context.Background(), get_role_by_title_query, title).Scan(&id); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return -1, response_errors.ErrNoRecordFound
-		}
-
-		return -1, err
-	}
-
-	err = tx.Commit(ctx)
-	if err != nil {
-		return -1, err
-	}
-
-	return id, nil
-}
-
 const credential_creation_query = `INSERT INTO credentials(email, password_hash, register_date) 
 VALUES($1, $2, $3)
 RETURNING id

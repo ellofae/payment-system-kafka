@@ -17,7 +17,6 @@ type (
 type (
 	IAuthenticationRepository interface {
 		GetUserCredByEmail(context.Context, string) (*dto.CredentialDTO, error)
-		GetRoleByTitle(context.Context, string) (int, error)
 		SignUp(context.Context, *dto.UserCreationForm, string) (int, error)
 		GetUserIDByEmail(context.Context, string) (int, error)
 	}
