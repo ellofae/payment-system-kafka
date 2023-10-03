@@ -15,3 +15,21 @@ ProducerServer:
   readTimeout: '10'
   writeTimeout: '10'
   idleTimeout: '5'
+
+ClientServer:
+  bindAddr: '0.0.0.0:5000'
+  readTimeout: '10'
+  writeTimeout: '10'
+  idleTimeout: '5'
+
+PostgresDB:
+  user: 'postgres'
+  password: 'password'
+  host: 'localhost'
+  port: '5432'
+  dbname: 'authentication'
+  sslmode: 'disable'
+  maxconns: '30'
+
+Authentication:
+  jwtSecretKey: 'secretjwtkey'

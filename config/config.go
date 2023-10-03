@@ -28,6 +28,27 @@ type Config struct {
 		WriteTimeout string `yaml:"writeTimeout"`
 		IdleTimeout  string `yaml:"idleTimeout"`
 	} `yaml:"ProducerServer"`
+
+	ClientServer struct {
+		BindAddr     string `yaml:"bindAddr"`
+		ReadTimeout  string `yaml:"readTimeout"`
+		WriteTimeout string `yaml:"writeTimeout"`
+		IdleTimeout  string `yaml:"idleTimeout"`
+	} `yaml:"ClientServer"`
+
+	PostgresDB struct {
+		User     string `yaml:"user"`
+		Password string `yaml:"password"`
+		Host     string `yaml:"host"`
+		Port     string `yaml:"port"`
+		DBName   string `yaml:"dbname"`
+		SSLmode  string `yaml:"sslmode"`
+		MaxConns string `yaml:"maxconns"`
+	} `yaml:"PostgresDB"`
+
+	Authentication struct {
+		JWTSecretKey string `yaml:"jwtSecretKey"`
+	} `yaml:"Authentication"`
 }
 
 func ConfigureViper() *viper.Viper {
