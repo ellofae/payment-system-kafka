@@ -25,25 +25,28 @@ func Run() {
 	cfg := config.ParseConfig(config.ConfigureViper())
 	ctx := context.Background()
 
+	repository.InitSessionStorage(cfg)
+
 	connPool := postgres.OpenPoolConnection(ctx, cfg)
 	if err := connPool.Ping(ctx); err != nil {
 		log.Error("Unable to ping the database connection", "error", err.Error())
 		os.Exit(1)
 	}
+
 	postgres.RunMigrationsUp(ctx, cfg)
 
 	middleware.InitJWTSecretKey(cfg)
 
 	storage := repository.NewStorage(connPool)
-	router := InitRouter(storage)
+	router := initRouter(storage)
 
-	srv := InitHTTPServer(router, cfg)
+	srv := initHTTPServer(router, cfg)
 
-	StartServer(ctx, srv)
+	startServer(ctx, srv)
 
 }
 
-func InitRouter(storage *repository.Storage) *gin.Engine {
+func initRouter(storage *repository.Storage) *gin.Engine {
 	r := gin.Default()
 
 	r.LoadHTMLGlob("client/web/templates/*.html")
@@ -57,7 +60,7 @@ func InitRouter(storage *repository.Storage) *gin.Engine {
 	return r
 }
 
-func InitHTTPServer(router *gin.Engine, cfg *config.Config) http.Server {
+func initHTTPServer(router *gin.Engine, cfg *config.Config) http.Server {
 	readTimeoutSecondsCount, _ := strconv.Atoi(cfg.ClientServer.ReadTimeout)
 	writeTimeoutSecondsCount, _ := strconv.Atoi(cfg.ClientServer.WriteTimeout)
 	idleTimeoutSecondsCount, _ := strconv.Atoi(cfg.ClientServer.IdleTimeout)
@@ -75,7 +78,7 @@ func InitHTTPServer(router *gin.Engine, cfg *config.Config) http.Server {
 	return srv
 }
 
-func StartServer(ctx context.Context, srv http.Server) {
+func startServer(ctx context.Context, srv http.Server) {
 	log := logger.GetLogger()
 
 	go func() {

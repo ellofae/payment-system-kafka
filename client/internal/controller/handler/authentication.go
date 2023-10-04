@@ -1,12 +1,15 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/ellofae/payment-system-kafka/client/internal/controller"
+	"github.com/ellofae/payment-system-kafka/client/internal/controller/middleware"
 	"github.com/ellofae/payment-system-kafka/client/internal/domain"
 	"github.com/ellofae/payment-system-kafka/client/internal/dto"
 	response_errors "github.com/ellofae/payment-system-kafka/client/internal/errors"
+	"github.com/ellofae/payment-system-kafka/client/internal/repository"
 	"github.com/ellofae/payment-system-kafka/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/hashicorp/go-hclog"
@@ -30,8 +33,18 @@ func (h *AuthenticationHandler) Register(r *gin.Engine) {
 	authGroup.GET("/signup", h.handleRegistrationRendering)
 	authGroup.GET("/signin", h.handleUserLoginRendering)
 
+	authGroup.GET("/logout", middleware.AuthenticateUser, h.handleUserLogout)
+
 	authGroup.POST("/signup", h.handleUserRegistration)
 	authGroup.POST("/signin", h.handleUserLogin)
+
+	authGroup.GET("/test", middleware.AuthenticateUser, h.test)
+}
+
+func (h *AuthenticationHandler) test(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"status": "logged in",
+	})
 }
 
 func (h *AuthenticationHandler) handleRegistrationRendering(c *gin.Context) {
@@ -49,7 +62,7 @@ func (h *AuthenticationHandler) handleUserLoginRendering(c *gin.Context) {
 func (h *AuthenticationHandler) handleUserRegistration(c *gin.Context) {
 	req := &dto.UserCreationForm{}
 
-	err := c.ShouldBindJSON(req)
+	err := c.ShouldBind(req)
 	if err != nil {
 		response_errors.NewHTTPResponse(c, http.StatusBadRequest, "Incorrect provided data", err)
 		return
@@ -80,9 +93,9 @@ func (h *AuthenticationHandler) handleUserRegistration(c *gin.Context) {
 func (h *AuthenticationHandler) handleUserLogin(c *gin.Context) {
 	req := &dto.UserLoginForm{}
 
-	err := c.ShouldBindJSON(req)
+	err := c.ShouldBind(req)
 	if err != nil {
-		response_errors.NewHTTPResponse(c, http.StatusBadRequest, "Incorrect request data was provided", err)
+		response_errors.NewHTTPResponse(c, http.StatusBadRequest, "Incorrect provided data", err)
 		return
 	}
 
@@ -102,7 +115,41 @@ func (h *AuthenticationHandler) handleUserLogin(c *gin.Context) {
 		return
 	}
 
+	store := repository.SessionStorage()
+	session, err := store.Get(c.Request, "session")
+	if err != nil {
+		response_errors.NewHTTPResponse(c, http.StatusInternalServerError, "Unable to get the session", err)
+		return
+	}
+
+	session.Values["access_token"] = fmt.Sprintf("%s %s", "Bearer", access_token)
+	err = session.Save(c.Request, c.Writer)
+	if err != nil {
+		response_errors.NewHTTPResponse(c, http.StatusInternalServerError, "Unable to save session data", err)
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"access_token": access_token,
+	})
+}
+
+func (h *AuthenticationHandler) handleUserLogout(c *gin.Context) {
+	store := repository.SessionStorage()
+
+	session, err := store.Get(c.Request, "session")
+	if err != nil {
+		response_errors.NewHTTPResponse(c, http.StatusInternalServerError, "Unable to get the session", err)
+		return
+	}
+
+	delete(session.Values, "access_token")
+	if err = session.Save(c.Request, c.Writer); err != nil {
+		response_errors.NewHTTPResponse(c, http.StatusInternalServerError, "Unable to save session data", err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "You have logged out",
 	})
 }

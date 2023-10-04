@@ -49,6 +49,10 @@ type Config struct {
 	Authentication struct {
 		JWTSecretKey string `yaml:"jwtSecretKey"`
 	} `yaml:"Authentication"`
+
+	Session struct {
+		SessionKey string `yaml:"sessionKey"`
+	} `yaml:"Session"`
 }
 
 func ConfigureViper() *viper.Viper {

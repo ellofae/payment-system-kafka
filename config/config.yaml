@@ -32,4 +32,7 @@ PostgresDB:
   maxconns: '30'
 
 Authentication:
-  jwtSecretKey: 'secretjwtkey'
+  jwtSecretKey: 'ZYjreWzFwMMiy54TWiymSvCv8b4Z94dysgShdYXW0eA='
+
+Session:
+  sessionKey: 'QukKcWJ3BNJ70LIIzcB6yqEi/1qFzPq8MdOZCGPziWc='

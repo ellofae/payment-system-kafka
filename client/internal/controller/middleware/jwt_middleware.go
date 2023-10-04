@@ -9,6 +9,7 @@ import (
 	"time"
 
 	response_errors "github.com/ellofae/payment-system-kafka/client/internal/errors"
+	"github.com/ellofae/payment-system-kafka/client/internal/repository"
 	"github.com/ellofae/payment-system-kafka/config"
 	"github.com/ellofae/payment-system-kafka/pkg/logger"
 	"github.com/gin-gonic/gin"
@@ -82,17 +83,23 @@ func ParseToken(tokenString string) (*AccessTokenData, error) {
 }
 
 func AuthenticateUser(c *gin.Context) {
-	header_data := c.GetHeader(authorizationHeader)
+	storage := repository.SessionStorage()
 
-	if header_data == "" {
-		response_errors.NewErrorResponse(c, http.StatusUnauthorized, "Authorization header is empty")
+	session, err := storage.Get(c.Request, "session")
+	if err != nil {
+		response_errors.NewErrorResponse(c, http.StatusInternalServerError, "Unable to get session")
 		return
 	}
 
-	jwtString := strings.Split(header_data, "Bearer ")
+	sessionValue, ok := session.Values["access_token"]
+	if !ok {
+		response_errors.NewErrorResponse(c, http.StatusUnauthorized, "Authorization data field is empty")
+		return
+	}
 
+	jwtString := strings.Split(sessionValue.(string), "Bearer ")
 	if len(jwtString) < 2 {
-		response_errors.NewErrorResponse(c, http.StatusInternalServerError, "Must provide Authorization header with format `Bearer {token}`")
+		response_errors.NewErrorResponse(c, http.StatusInternalServerError, "Must provide Authorization data with format `Bearer {token}`")
 		return
 	}
 
@@ -107,6 +114,7 @@ func AuthenticateUser(c *gin.Context) {
 		response_errors.NewErrorResponse(c, http.StatusInternalServerError, "Token expired")
 		return
 	}
-	c.Set("user_id", token_claims.UserID)
+
+	session.Values["user_id"] = token_claims.UserID
 	c.Next()
 }

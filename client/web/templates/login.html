@@ -9,14 +9,14 @@
 
   <body>
 	<div class="container mt-5">
-		<form action="/auth/signin" method="POST">
+		<form action="/auth/signin" method="POST" enctype="multipart/form-data">
 			<div class="mb-3">
 				<label for="email" class="form-label">Email address</label>
-				<input type="email" class="form-control" id="email" placeholder="name@example.com">
+				<input type="email" class="form-control" id="email" placeholder="name@example.com" name="email">
 			</div>
 			<div class="mb-3">
 				<label for="password" class="form-label">Password</label>
-				<input type="password" id="password" class="form-control" aria-describedby="passwordHelpBlock">
+				<input type="password" id="password" class="form-control" aria-describedby="passwordHelpBlock" name="password">
 			</div>
 			<div>
 				<button type="submit" class="btn btn-primary mb-3">Submit</button>
