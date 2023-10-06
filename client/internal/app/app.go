@@ -51,11 +51,16 @@ func initRouter(storage *repository.Storage) *gin.Engine {
 
 	r.LoadHTMLGlob("client/web/templates/*.html")
 
+	r.Static("/assets", "./client/web/assets")
+
 	authenticationRepository := repository.NewAuthenticationRepository(storage)
 	authenticationUsecase := usecase.NewAuthenticationUsecase(authenticationRepository)
 	authenticationHandler := handler.NewAuthenticationHandler(authenticationUsecase)
 
+	informationHandler := handler.NewInformationHandler()
+
 	authenticationHandler.Register(r)
+	informationHandler.Register(r)
 
 	return r
 }

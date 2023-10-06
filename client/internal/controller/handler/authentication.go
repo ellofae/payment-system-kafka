@@ -37,14 +37,6 @@ func (h *AuthenticationHandler) Register(r *gin.Engine) {
 
 	authGroup.POST("/signup", h.handleUserRegistration)
 	authGroup.POST("/signin", h.handleUserLogin)
-
-	authGroup.GET("/test", middleware.AuthenticateUser, h.test)
-}
-
-func (h *AuthenticationHandler) test(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"status": "logged in",
-	})
 }
 
 func (h *AuthenticationHandler) handleRegistrationRendering(c *gin.Context) {
