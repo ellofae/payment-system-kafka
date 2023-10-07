@@ -52,7 +52,7 @@ func (tp *TransactionProducer) ProduceTransaction(transactionData *entity.Transa
 	}
 
 	<-tp.transactionStatus
-	log.Info(fmt.Sprintf("Placed transaction on the queue, transaction ID: %d", transactionData.TransactionID))
+	log.Info(fmt.Sprintf("Placed transaction on the queue, transaction ID: %s", transactionData.TransactionID))
 
 	return nil
 }

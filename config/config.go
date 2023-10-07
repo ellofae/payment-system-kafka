@@ -53,6 +53,10 @@ type Config struct {
 	Session struct {
 		SessionKey string `yaml:"sessionKey"`
 	} `yaml:"Session"`
+
+	Redis struct {
+		Password string `yaml:"password"`
+	} `yaml:"Redis"`
 }
 
 func ConfigureViper() *viper.Viper {

@@ -116,5 +116,11 @@ func AuthenticateUser(c *gin.Context) {
 	}
 
 	session.Values["user_id"] = token_claims.UserID
+	err = session.Save(c.Request, c.Writer)
+	if err != nil {
+		response_errors.NewHTTPResponse(c, http.StatusInternalServerError, "Unable to save session data", err)
+		return
+	}
+
 	c.Next()
 }

@@ -57,10 +57,14 @@ func initRouter(storage *repository.Storage) *gin.Engine {
 	authenticationUsecase := usecase.NewAuthenticationUsecase(authenticationRepository)
 	authenticationHandler := handler.NewAuthenticationHandler(authenticationUsecase)
 
+	transactionUsecase := usecase.NewTransactionUsecase()
+	transactionHandler := handler.NewTransactionHandler(transactionUsecase)
+
 	informationHandler := handler.NewInformationHandler()
 
 	authenticationHandler.Register(r)
 	informationHandler.Register(r)
+	transactionHandler.Register(r)
 
 	return r
 }

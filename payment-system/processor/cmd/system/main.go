@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -11,8 +12,10 @@ import (
 	"github.com/ellofae/payment-system-kafka/config"
 	"github.com/ellofae/payment-system-kafka/payment-system/processor/internal/domain/entity"
 	"github.com/ellofae/payment-system-kafka/payment-system/processor/internal/processing"
+	"github.com/ellofae/payment-system-kafka/payment-system/processor/internal/repository"
 	"github.com/ellofae/payment-system-kafka/pkg/encryption"
 	"github.com/ellofae/payment-system-kafka/pkg/logger"
+	"github.com/ellofae/payment-system-kafka/pkg/redis"
 )
 
 const topic string = "purchases"
@@ -21,6 +24,10 @@ const MIN_COMMIT_COUNT = 5
 func main() {
 	log := logger.GetLogger()
 	cfg := config.ParseConfig(config.ConfigureViper())
+	ctx := context.Background()
+
+	redisClient := redis.OpenRedisConnection(ctx, cfg)
+	redisRepository := repository.NewStroage(redisClient.Client)
 
 	encryption.InitializeEncryptionKey(cfg)
 
@@ -74,8 +81,10 @@ func main() {
 					return
 				}
 
-				//transactionData.CardNumber = encryption.DecryptData([]byte("key"), transactionData.CardNumber)
-
+				if err := redisRepository.Insert(ctx, transactionData); err != nil {
+					log.Error("Failed to store consumed transaction", "error", err.Error())
+					return
+				}
 				fmt.Printf("processed transaction: %v\n", transactionData)
 			}()
 		case kafka.PartitionEOF:

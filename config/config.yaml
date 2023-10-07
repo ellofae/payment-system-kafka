@@ -36,3 +36,6 @@ Authentication:
 
 Session:
   sessionKey: 'QukKcWJ3BNJ70LIIzcB6yqEi/1qFzPq8MdOZCGPziWc='
+
+Redis:
+  passwrod: ''

@@ -12,6 +12,11 @@ type (
 		SignUp(context.Context, *dto.UserCreationForm) (int, error)
 		SignIn(context.Context, *dto.UserLoginForm) (string, error)
 	}
+
+	ITransactionUsecase interface {
+		ValidateDTOStruct(interface{}) error
+		PlaceTransaction(*dto.TransactionData) error
+	}
 )
 
 type (

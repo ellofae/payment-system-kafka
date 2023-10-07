@@ -17,7 +17,7 @@ type AuthenticationUsecase struct {
 	repo   domain.IAuthenticationRepository
 }
 
-func NewAuthenticationUsecase(repo domain.IAuthenticationRepository) *AuthenticationUsecase {
+func NewAuthenticationUsecase(repo domain.IAuthenticationRepository) domain.IAuthenticationUsecase {
 	return &AuthenticationUsecase{
 		logger: logger.GetLogger(),
 		repo:   repo,
