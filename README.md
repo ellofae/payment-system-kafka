@@ -47,7 +47,7 @@ Tasks:
 
 * Ensures that all messages are processed reliably and in accordance with the system's requirements.
 
-## System's database
+## Client's database
 The database schema consists of three relationships: credentials, users, and transactions.
 
 1. `Credentials`:
