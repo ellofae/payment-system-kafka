@@ -4,6 +4,7 @@ import (
 	"github.com/ellofae/payment-system-kafka/client/internal/domain"
 	"github.com/ellofae/payment-system-kafka/client/internal/dto"
 	"github.com/ellofae/payment-system-kafka/client/internal/utils"
+	"github.com/ellofae/payment-system-kafka/pkg/encryption"
 	"github.com/ellofae/payment-system-kafka/pkg/logger"
 	"github.com/hashicorp/go-hclog"
 )
@@ -38,5 +39,6 @@ func (u *TransactionUsecase) PlaceTransaction(req *dto.TransactionData) error {
 		return err
 	}
 
+	req.CardNumber = encryption.EncryptData([]byte(req.CardNumber))
 	return nil
 }

@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
-	"net/http/httputil"
 	"strconv"
 
 	"github.com/ellofae/payment-system-kafka/client/internal/controller"
@@ -76,7 +75,8 @@ func (h *TransactionHandler) handleTransactionSending(c *gin.Context) {
 
 	jsonData, err := json.Marshal(transactionRequest)
 	if err != nil {
-		panic(err)
+		response_errors.NewHTTPErrorResposne(c, http.StatusInternalServerError, "Unable to marshall data", err)
+		return
 	}
 
 	response, err := http.Post("http://localhost:8000/transaction/place", "application/json", bytes.NewBuffer(jsonData))
@@ -86,14 +86,7 @@ func (h *TransactionHandler) handleTransactionSending(c *gin.Context) {
 	}
 	defer response.Body.Close()
 
-	responseBody, err := httputil.DumpResponse(response, true)
-	if err != nil {
-		response_errors.NewHTTPErrorResposne(c, http.StatusInternalServerError, "Unable to dump response body", err)
-		return
-	}
-
 	c.JSON(http.StatusOK, gin.H{
-		"message":  "transaction is placed",
-		"response": string(responseBody),
+		"message": "transaction is placed",
 	})
 }

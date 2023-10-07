@@ -15,6 +15,7 @@ import (
 	"github.com/ellofae/payment-system-kafka/client/internal/domain/usecase"
 	"github.com/ellofae/payment-system-kafka/client/internal/repository"
 	"github.com/ellofae/payment-system-kafka/config"
+	"github.com/ellofae/payment-system-kafka/pkg/encryption"
 	"github.com/ellofae/payment-system-kafka/pkg/logger"
 	"github.com/ellofae/payment-system-kafka/pkg/postgres"
 	"github.com/gin-gonic/gin"
@@ -25,6 +26,7 @@ func Run() {
 	cfg := config.ParseConfig(config.ConfigureViper())
 	ctx := context.Background()
 
+	encryption.InitializeEncryptionKey(cfg)
 	repository.InitSessionStorage(cfg)
 
 	connPool := postgres.OpenPoolConnection(ctx, cfg)
