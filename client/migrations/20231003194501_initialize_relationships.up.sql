@@ -16,3 +16,11 @@ CREATE TABLE IF NOT EXISTS users (
     CONSTRAINT unique_credential_id UNIQUE(credential_id),
     CONSTRAINT fk_credentials_users FOREIGN KEY (credential_id) REFERENCES credentials(id)
 );
+
+CREATE TABLE IF NOT EXISTS transactions (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    transaction_id VARCHAR(256) NOT NULL,
+
+    CONSTRAINT fk_user_transactions FOREIGN KEY (user_id) REFERENCES users(id)
+);

@@ -16,6 +16,10 @@ type (
 	ITransactionUsecase interface {
 		ValidateDTOStruct(interface{}) error
 		PlaceTransaction(*dto.TransactionData) error
+		AttachTransaction(context.Context, *dto.TransactionData) error
+	}
+
+	IUserUsecase interface {
 	}
 )
 
@@ -24,5 +28,9 @@ type (
 		GetUserCredByEmail(context.Context, string) (*dto.CredentialDTO, error)
 		SignUp(context.Context, *dto.UserCreationForm, string) (int, error)
 		GetUserIDByEmail(context.Context, string) (int, error)
+	}
+
+	ITransactionRepository interface {
+		AttachTrasaction(context.Context, int, string) (int, error)
 	}
 )

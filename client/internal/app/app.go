@@ -59,7 +59,8 @@ func initRouter(storage *repository.Storage) *gin.Engine {
 	authenticationUsecase := usecase.NewAuthenticationUsecase(authenticationRepository)
 	authenticationHandler := handler.NewAuthenticationHandler(authenticationUsecase)
 
-	transactionUsecase := usecase.NewTransactionUsecase()
+	transactionRepository := repository.NewTransactionRepository(storage)
+	transactionUsecase := usecase.NewTransactionUsecase(transactionRepository)
 	transactionHandler := handler.NewTransactionHandler(transactionUsecase)
 
 	informationHandler := handler.NewInformationHandler()

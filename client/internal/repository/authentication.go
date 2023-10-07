@@ -5,6 +5,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/ellofae/payment-system-kafka/client/internal/domain"
 	"github.com/ellofae/payment-system-kafka/client/internal/domain/entity"
 	"github.com/ellofae/payment-system-kafka/client/internal/dto"
 	response_errors "github.com/ellofae/payment-system-kafka/client/internal/errors"
@@ -18,7 +19,7 @@ type AuthenticationRepository struct {
 	storage *Storage
 }
 
-func NewAuthenticationRepository(storage *Storage) *AuthenticationRepository {
+func NewAuthenticationRepository(storage *Storage) domain.IAuthenticationRepository {
 	return &AuthenticationRepository{
 		logger:  logger.GetLogger(),
 		storage: storage,

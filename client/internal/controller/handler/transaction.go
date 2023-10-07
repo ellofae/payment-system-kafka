@@ -34,7 +34,6 @@ func (h *TransactionHandler) Register(r *gin.Engine) {
 	transactionGroup := r.Group("/transaction")
 
 	transactionGroup.GET("/commit", middleware.AuthenticateUser, h.handleTransactionCommit)
-
 	transactionGroup.POST("/send", middleware.AuthenticateUser, h.handleTransactionSending)
 }
 
@@ -85,6 +84,11 @@ func (h *TransactionHandler) handleTransactionSending(c *gin.Context) {
 		return
 	}
 	defer response.Body.Close()
+
+	if err := h.usecase.AttachTransaction(c.Request.Context(), transactionRequest); err != nil {
+		response_errors.NewHTTPErrorResposne(c, http.StatusInternalServerError, "Unable to attach transaction to a user", err)
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "transaction is placed",

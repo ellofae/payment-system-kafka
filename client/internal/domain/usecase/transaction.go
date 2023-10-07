@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"context"
+
 	"github.com/ellofae/payment-system-kafka/client/internal/domain"
 	"github.com/ellofae/payment-system-kafka/client/internal/dto"
 	"github.com/ellofae/payment-system-kafka/client/internal/utils"
@@ -11,11 +13,13 @@ import (
 
 type TransactionUsecase struct {
 	logger hclog.Logger
+	repo   domain.ITransactionRepository
 }
 
-func NewTransactionUsecase() domain.ITransactionUsecase {
+func NewTransactionUsecase(repo domain.ITransactionRepository) domain.ITransactionUsecase {
 	return &TransactionUsecase{
 		logger: logger.GetLogger(),
+		repo:   repo,
 	}
 }
 
@@ -40,5 +44,16 @@ func (u *TransactionUsecase) PlaceTransaction(req *dto.TransactionData) error {
 	}
 
 	req.CardNumber = encryption.EncryptData([]byte(req.CardNumber))
+
+	return nil
+}
+
+func (u *TransactionUsecase) AttachTransaction(ctx context.Context, req *dto.TransactionData) error {
+	_, err := u.repo.AttachTrasaction(ctx, req.UserID, req.TransactionID)
+	if err != nil {
+		u.logger.Error("Unable to store user's transaction", "error", err.Error())
+		return err
+	}
+
 	return nil
 }
