@@ -20,6 +20,8 @@ type (
 	}
 
 	IUserUsecase interface {
+		GetUserTransaction(context.Context, int) ([]*dto.TransactionDisplayData, error)
+		GetUserData(context.Context, int) (*dto.UserData, error)
 	}
 )
 
@@ -31,6 +33,11 @@ type (
 	}
 
 	ITransactionRepository interface {
-		AttachTrasaction(context.Context, int, string) (int, error)
+		AttachTrasaction(context.Context, int, string, string, float64) (int, error)
+	}
+
+	IUserRepository interface {
+		GetUserTransaction(context.Context, int) ([]*dto.TransactionDisplayData, error)
+		GetUserData(context.Context, int) (*dto.UserIntermediateData, error)
 	}
 )

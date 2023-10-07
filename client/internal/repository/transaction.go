@@ -20,11 +20,11 @@ func NewTransactionRepository(storage *Storage) domain.ITransactionRepository {
 	}
 }
 
-const attach_transaction string = `INSERT INTO transactions(user_id, transaction_id) 
-VALUES($1, $2)
+const attach_transaction string = `INSERT INTO transactions(user_id, transaction_id, card_number, amount) 
+VALUES($1, $2, $3, $4)
 RETURNING id`
 
-func (r *TransactionRepository) AttachTrasaction(ctx context.Context, userID int, transactionID string) (int, error) {
+func (r *TransactionRepository) AttachTrasaction(ctx context.Context, userID int, transactionID string, cardNumber string, amount float64) (int, error) {
 	conn, err := r.storage.GetPgConnPool().Acquire(ctx)
 	if err != nil {
 		return -1, err
@@ -38,7 +38,7 @@ func (r *TransactionRepository) AttachTrasaction(ctx context.Context, userID int
 	defer tx.Rollback(ctx)
 
 	var receivedID int
-	err = tx.QueryRow(ctx, attach_transaction, userID, transactionID).Scan(&receivedID)
+	err = tx.QueryRow(ctx, attach_transaction, userID, transactionID, cardNumber, amount).Scan(&receivedID)
 	if err != nil {
 		return -1, err
 	}

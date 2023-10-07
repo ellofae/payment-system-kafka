@@ -27,7 +27,7 @@ PostgresDB:
   password: 'password'
   host: 'localhost'
   port: '5432'
-  dbname: 'authentication'
+  dbname: 'client_database'
   sslmode: 'disable'
   maxconns: '30'
 

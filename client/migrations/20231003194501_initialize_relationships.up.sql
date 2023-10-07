@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS transactions (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
     transaction_id VARCHAR(256) NOT NULL,
+    card_number VARCHAR(128) NOT NULL,
+    amount DECIMAL NOT NULL
 
     CONSTRAINT fk_user_transactions FOREIGN KEY (user_id) REFERENCES users(id)
 );

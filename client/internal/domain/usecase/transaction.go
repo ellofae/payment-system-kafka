@@ -49,7 +49,9 @@ func (u *TransactionUsecase) PlaceTransaction(req *dto.TransactionData) error {
 }
 
 func (u *TransactionUsecase) AttachTransaction(ctx context.Context, req *dto.TransactionData) error {
-	_, err := u.repo.AttachTrasaction(ctx, req.UserID, req.TransactionID)
+	decodedCardNumber := encryption.DecryptData([]byte(req.CardNumber))
+
+	_, err := u.repo.AttachTrasaction(ctx, req.UserID, req.TransactionID, decodedCardNumber, req.Amount)
 	if err != nil {
 		u.logger.Error("Unable to store user's transaction", "error", err.Error())
 		return err

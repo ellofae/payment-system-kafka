@@ -58,6 +58,7 @@ func (th *TransactionHandler) handlePlaceTransaction(c *gin.Context) {
 			})
 			return
 		}
+
 	}()
 
 	c.JSON(http.StatusOK, gin.H{
